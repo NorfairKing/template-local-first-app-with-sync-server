@@ -43,6 +43,16 @@ template-filler --source /path/to/this/template-cli --destination /path/to/your/
 
 This template contains these haskell packages and notable modules:
 
+- `foobar-data`: The data that is common across the server and the client.
+  - `Foobar.Data.Thing`: This is where the type to-be-synced is defined: `Thing`.
+- `foobar-data-gen`: Generators and tests for those types
+  - `Foobar.Data.Thing.Gen`: The generator for `Thing`.
+- `foobar-server-data`: The server-specific data types and database definition.
+  - `Foobar.Server.Data.DB`: The server database definition
+- `foobar-server-data-gen`: Generators and tests for those types
+- `foobar-client-data`: The client-specific data types and database definition.
+  - `Foobar.Client.Data.DB`: The client database definition
+- `foobar-client-data-gen`: Generators and tests for those types
 - `foobar-api`: The API, as a `servant`-based type definition, and related data types.
   - `Foobar.API.Data`: The API data type definitions
   - `Foobar.API`: The API Type definition
@@ -55,14 +65,14 @@ This template contains these haskell packages and notable modules:
 - `foobar-api-server-gen`: The generators and tests for the API server.
   - `Foobar.API.Server.TestUtils`: Utility functions to write tests that use the API server
   - `Foobar.API.Server.Handler.<CommandName>Spec`: One module per handler containing its tests
+  - `Foobar.API.Server.Handler.Sync`: The server-side implementation of synchronisation.
 - `foobar-client`: The client record of functions to call the API server.
   - The `Foobar.Client.foobarClient` record.
 - `foobar-cli`: An example command-line tool to call the API server.
   - `Foobar.CLI.OptParse`: Option parsing
   - `Foobar.CLI.Env`: The (read-only) environment and related functions
   - `Foobar.CLI.Command.<CommandName>`: One module per command of the CLI.
-
-TODO: Information about all the data packages
+  - `Foobar.CLI.Command.Sync`: The client-side implementation of synchronisation.
 
 ![Dependency graph](dependencies.png)
 
