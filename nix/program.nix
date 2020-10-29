@@ -13,13 +13,6 @@ in
       programs.foobar =
         {
           enable = mkEnableOption "Foobar cli and syncing";
-          decks =
-            mkOption {
-              type = types.listOf types.str;
-              example = [ "~/decks" ];
-              default = [];
-              description = "Where to find the decks to study";
-            };
           extraConfig =
             mkOption {
               type = types.str;
@@ -66,8 +59,6 @@ in
       foobarPkgs = (import ./pkgs.nix).foobarPackages;
       configContents = cfg: ''
         
-decks: ${builtins.toJSON cfg.decks}
-${cfg.extraConfig}
 
       '';
       syncConfigContents = syncCfg:
