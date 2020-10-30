@@ -128,7 +128,6 @@ password: "${cfg.sync.password}"
       packages =
         [
           foobarPkgs.foobar-cli
-          foobarPkgs.foobar-tui
         ];
 
 
