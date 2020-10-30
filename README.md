@@ -159,10 +159,14 @@ Then  make the following changes:
 1. Add a data type for the thing you want to sync, like in `foobar-data/src/Foobar/Data/Thing.hs`.
 2. Add a declaration of a table on the server side for it, in `foobar-api-server-data/src/Foobar/API/Server/Data/DB.hs`.
    This table will likely have a `user` column, to separate the syncing per server.
+   When using `mergeful`, you will also need a `serverTime :: ServerTime` field, to represent the version number on the server side.
 3. Add a declaration of a table on the client side for it, in `foobar-client-data/src/Foobar/Client/Data/DB.hs`.
    This table will have to have extra fields, on top of the data of the `Thing`, depending on which library you use.
    In any case, you will need a `serverId :: Maybe ServerThingId` field, to represent that the thing has been synced.
-   When using `mergeful`, you will also need a `modifiedLocally :: Bool` field, to represent that the thing has been changed locally but that that modification has not been synced.
+   When using `mergeful`, you will also need these fields:
+   * `deletedLocally :: Bool`, to represent that the thing has been deleted locally but that that deletion has not been synced.
+   * `modifiedLocally :: Bool`, to represent that the thing has been changed locally but that that modification has not been synced.
+   * `serverTime :: Bool`, to represent the synced version number
 4. Change the `SyncRequest` and `SyncResponse` type in `foobar-api/src/Foobar/API/Data.hs` to include a field for syncing the new type.
    When syncing multiple things, these types can just contain one field for each type of thing to sync.
 5. Implement the server-side of the synchronisation in `foobar-api-server/src/Foobar/API/Server/Handler/Sync.hs` following the documentation in your chosen synchronisation library.
