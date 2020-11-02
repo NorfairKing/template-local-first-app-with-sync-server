@@ -37,52 +37,52 @@ To use this template in a new project, choose the name for your project, for exa
 Then use [template-filler](https://github.com/NorfairKing/template-filler) to use the template, like this:
 
 ```
-template-filler --source /path/to/this/template-local-first-app-with-sync-server --destination /path/to/your/shelter --find Foobar --replace Shelter
+template-filler --source /path/to/this/template-local-first-app-with-sync-server --destination /path/to/your/shelter --find Foo.Bar --replace Shelter
 ```
 
 ### Template overview
 
 This template contains these haskell packages and notable modules:
 
-- `foobar-data`: The data that is common across the server and the client.
-  - `Foobar.Data.Thing`: This is where the type to-be-synced is defined: `Thing`.
-- `foobar-data-gen`: Generators and tests for those types
-  - `Foobar.Data.Thing.Gen`: The generator for `Thing`.
-- `foobar-server-data`: The server-specific data types and database definition.
-  - `Foobar.Server.Data.DB`: The server database definition
-- `foobar-server-data-gen`: Generators and tests for those types
-- `foobar-client-data`: The client-specific data types and database definition.
-  - `Foobar.Client.Data.DB`: The client database definition
-- `foobar-client-data-gen`: Generators and tests for those types
-- `foobar-api`: The API, as a `servant`-based type definition, and related data types.
-  - `Foobar.API.Data`: The API data type definitions
-  - `Foobar.API`: The API Type definition
-- `foobar-api-gen`: The generators and tests for the API and its data types.
+- `foo-bar-data`: The data that is common across the server and the client.
+  - `Foo.Bar.Data.Thing`: This is where the type to-be-synced is defined: `Thing`.
+- `foo-bar-data-gen`: Generators and tests for those types
+  - `Foo.Bar.Data.Thing.Gen`: The generator for `Thing`.
+- `foo-bar-server-data`: The server-specific data types and database definition.
+  - `Foo.Bar.Server.Data.DB`: The server database definition
+- `foo-bar-server-data-gen`: Generators and tests for those types
+- `foo-bar-client-data`: The client-specific data types and database definition.
+  - `Foo.Bar.Client.Data.DB`: The client database definition
+- `foo-bar-client-data-gen`: Generators and tests for those types
+- `foo-bar-api`: The API, as a `servant`-based type definition, and related data types.
+  - `Foo.Bar.API.Data`: The API data type definitions
+  - `Foo.Bar.API`: The API Type definition
+- `foo-bar-api-gen`: The generators and tests for the API and its data types.
   - `FooBar.API.Data.Gen`: Generators for the API data types
-- `foobar-api-server`: The API server that implements this API.
-  - `Foobar.API.Server.OptParse`: Option parsing
-  - `Foobar.API.Server.Env`: The (read-only) environment and related functions
-  - `Foobar.API.Server.Handler.<CommandName>`: One module per command of the CLI.
-- `foobar-api-server-gen`: The generators and tests for the API server.
-  - `Foobar.API.Server.TestUtils`: Utility functions to write tests that use the API server
-  - `Foobar.API.Server.Handler.<CommandName>Spec`: One module per handler containing its tests
-  - `Foobar.API.Server.Handler.Sync`: The server-side implementation of synchronisation.
-- `foobar-client`: The client record of functions to call the API server.
-  - The `Foobar.Client.foobarClient` record.
-- `foobar-cli`: An example command-line tool to call the API server.
-  - `Foobar.CLI.OptParse`: Option parsing
-  - `Foobar.CLI.Env`: The (read-only) environment and related functions
-  - `Foobar.CLI.Command.<CommandName>`: One module per command of the CLI.
-  - `Foobar.CLI.Command.Sync`: The client-side implementation of synchronisation.
+- `foo-bar-api-server`: The API server that implements this API.
+  - `Foo.Bar.API.Server.OptParse`: Option parsing
+  - `Foo.Bar.API.Server.Env`: The (read-only) environment and related functions
+  - `Foo.Bar.API.Server.Handler.<CommandName>`: One module per command of the CLI.
+- `foo-bar-api-server-gen`: The generators and tests for the API server.
+  - `Foo.Bar.API.Server.TestUtils`: Utility functions to write tests that use the API server
+  - `Foo.Bar.API.Server.Handler.<CommandName>Spec`: One module per handler containing its tests
+  - `Foo.Bar.API.Server.Handler.Sync`: The server-side implementation of synchronisation.
+- `foo-bar-client`: The client record of functions to call the API server.
+  - The `Foo.Bar.Client.foo-barClient` record.
+- `foo-bar-cli`: An example command-line tool to call the API server.
+  - `Foo.Bar.CLI.OptParse`: Option parsing
+  - `Foo.Bar.CLI.Env`: The (read-only) environment and related functions
+  - `Foo.Bar.CLI.Command.<CommandName>`: One module per command of the CLI.
+  - `Foo.Bar.CLI.Command.Sync`: The client-side implementation of synchronisation.
 
 ![Dependency graph](dependencies.png)
 
 ### OptParse
 
-The option parsing for both `foobar-cli` and `foobar-api-server` is based on [the option parsing template](https://github.com/NorfairKing/template-optparse).
+The option parsing for both `foo-bar-cli` and `foo-bar-api-server` is based on [the option parsing template](https://github.com/NorfairKing/template-optparse).
 It is included in this template so you will not need to also buy the option parsing template.
 
-For more information about how to use the option parsing, follow the instructions in `template-cli/src/Foobar/Cli/OptParse.hs`.
+For more information about how to use the option parsing, follow the instructions in `template-cli/src/Foo/Bar/Cli/OptParse.hs`.
 
 ### Nix build
 
@@ -117,8 +117,8 @@ Then put its signing key in the 'Secrets' part of your repository on github.
 
 #### Adding an endpoint to the API
 
-1. Add the endpoint in `foobar-api/src/Foobar/API.hs`.
-2. Add a handler module in `foobar-api-server/src/Fooba/API/Server/Handler/<RouteName>hs` with a function as follows:
+1. Add the endpoint in `foo-bar-api/src/Foo/Bar/API.hs`.
+2. Add a handler module in `foo-bar-api-server/src/Foo/Bar/API/Server/Handler/<RouteName>hs` with a function as follows:
 
    ```
    handle<RouteName> :: H ()
@@ -127,24 +127,24 @@ Then put its signing key in the 'Secrets' part of your repository on github.
    Give it a type according to the endpoint type.
    If it requires authentication, add `AuthCookie` as the first argument.
 
-3. Hook up the handler in the `foobarHandlers` record in `foobar-api-server/src/Foobar/API/Server.hs`.
+3. Hook up the handler in the `foo-barHandlers` record in `foo-bar-api-server/src/Foo/Bar/API/Server.hs`.
 
    If the endpoint requires authentication, use the `protected` combinator.
 
-4. Add tests in `foobar-api-server-gen/test/Foobar/API/Server/Handler/<RouteName>Spec.hs`
+4. Add tests in `foo-bar-api-server-gen/test/Foo/Bar/API/Server/Handler/<RouteName>Spec.hs`
 
 #### Adding a command to the CLI tool
 
-1. Add the new command's option parsing in the `Foobar.CLI.OptParse` module according to the instructions within.
+1. Add the new command's option parsing in the `Foo.Bar.CLI.OptParse` module according to the instructions within.
 
-2. Add a `Foobar.CLI.Command.<CommandName>` module with a function as follows:
+2. Add a `Foo.Bar.CLI.Command.<CommandName>` module with a function as follows:
 
    ```
    commandName :: CommandNameSettings -> C ()
    ```
 
-3. Add a case to the `dispatch` function in `Foobar.CLI`.
-4. Add tests in `Foobar.CLI.Command.<CommandName>Spec`.
+3. Add a case to the `dispatch` function in `Foo.Bar.CLI`.
+4. Add tests in `Foo.Bar.CLI.Command.<CommandName>Spec`.
 
 #### Adding a new table to sync
 
@@ -156,19 +156,19 @@ To add another piece to synchronise on, first you need to make the following des
 
 Then  make the following changes:
 
-1. Add a data type for the thing you want to sync, like in `foobar-data/src/Foobar/Data/Thing.hs`.
-2. Add a declaration of a table on the server side for it, in `foobar-api-server-data/src/Foobar/API/Server/Data/DB.hs`.
+1. Add a data type for the thing you want to sync, like in `foo-bar-data/src/Foo/Bar/Data/Thing.hs`.
+2. Add a declaration of a table on the server side for it, in `foo-bar-api-server-data/src/Foo/Bar/API/Server/Data/DB.hs`.
    This table will likely have a `user` column, to separate the syncing per server.
    When using `mergeful`, you will also need a `serverTime :: ServerTime` field, to represent the version number on the server side.
-3. Add a declaration of a table on the client side for it, in `foobar-client-data/src/Foobar/Client/Data/DB.hs`.
+3. Add a declaration of a table on the client side for it, in `foo-bar-client-data/src/Foo/Bar/Client/Data/DB.hs`.
    This table will have to have extra fields, on top of the data of the `Thing`, depending on which library you use.
    In any case, you will need a `serverId :: Maybe ServerThingId` field, to represent that the thing has been synced.
    When using `mergeful`, you will also need these fields:
    * `deletedLocally :: Bool`, to represent that the thing has been deleted locally but that that deletion has not been synced.
    * `modifiedLocally :: Bool`, to represent that the thing has been changed locally but that that modification has not been synced.
    * `serverTime :: Bool`, to represent the synced version number
-4. Change the `SyncRequest` and `SyncResponse` type in `foobar-api/src/Foobar/API/Data.hs` to include a field for syncing the new type.
+4. Change the `SyncRequest` and `SyncResponse` type in `foo-bar-api/src/Foo/Bar/API/Data.hs` to include a field for syncing the new type.
    When syncing multiple things, these types can just contain one field for each type of thing to sync.
-5. Implement the server-side of the synchronisation in `foobar-api-server/src/Foobar/API/Server/Handler/Sync.hs` following the documentation in your chosen synchronisation library.
+5. Implement the server-side of the synchronisation in `foo-bar-api-server/src/Foo/Bar/API/Server/Handler/Sync.hs` following the documentation in your chosen synchronisation library.
    Because we use persistent to store the things, you can probably use the `-persistent` version of the synchronisation library.
-6. Implement the client-side of the synchronisation in `foobar-cli/src/Foobar/CLI/Commands/Sync.hs` following the documentation in your chosen synchronisation library.
+6. Implement the client-side of the synchronisation in `foo-bar-cli/src/Foo/Bar/CLI/Commands/Sync.hs` following the documentation in your chosen synchronisation library.

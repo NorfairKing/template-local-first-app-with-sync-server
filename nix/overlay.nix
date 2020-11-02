@@ -2,7 +2,7 @@ final: previous:
 with final.haskell.lib;
 
 {
-  foobarCasts =
+  foo-barCasts =
     let
       mkCastDerivation = import (
         builtins.fetchGit {
@@ -10,17 +10,17 @@ with final.haskell.lib;
           rev = "da5bf9d61108a4a89addc8203b1579a364ce8c01";
           ref = "master";
         } + "/nix/cast.nix"
-      ) { pkgs = final // final.foobarPackages; };
+      ) { pkgs = final // final.foo-barPackages; };
     in
       {
-        foobar-basics-cast = mkCastDerivation {
-          name = "foobar-basics-cast";
+        foo-bar-basics-cast = mkCastDerivation {
+          name = "foo-bar-basics-cast";
           src = ../casts/basics.yaml;
         };
       };
-  foobarPackages =
+  foo-barPackages =
     let
-      foobarPkg =
+      foo-barPkg =
         name:
           doBenchmark (
             addBuildDepend (
@@ -31,24 +31,24 @@ with final.haskell.lib;
               )
             ) (final.haskellPackages.autoexporter)
           );
-      foobarPkgWithComp =
+      foo-barPkgWithComp =
         exeName: name:
-          generateOptparseApplicativeCompletion exeName (foobarPkg name);
-      foobarPkgWithOwnComp = name: foobarPkgWithComp name name;
+          generateOptparseApplicativeCompletion exeName (foo-barPkg name);
+      foo-barPkgWithOwnComp = name: foo-barPkgWithComp name name;
 
     in
       {
-        "foobar-api" = foobarPkg "foobar-api";
-        "foobar-api-gen" = foobarPkg "foobar-api-gen";
-        "foobar-api-server" = foobarPkgWithOwnComp "foobar-api-server";
-        "foobar-api-server-data" = foobarPkg "foobar-api-server-data";
-        "foobar-api-server-data-gen" = foobarPkg "foobar-api-server-data-gen";
-        "foobar-api-server-gen" = foobarPkg "foobar-api-server-gen";
-        "foobar-cli" = foobarPkgWithComp "foobar" "foobar-cli";
-        "foobar-client" = foobarPkg "foobar-client";
-        "foobar-client-data" = foobarPkg "foobar-client-data";
-        "foobar-data" = foobarPkg "foobar-data";
-        "foobar-data-gen" = foobarPkg "foobar-data-gen";
+        "foo-bar-api" = foo-barPkg "foo-bar-api";
+        "foo-bar-api-gen" = foo-barPkg "foo-bar-api-gen";
+        "foo-bar-api-server" = foo-barPkgWithOwnComp "foo-bar-api-server";
+        "foo-bar-api-server-data" = foo-barPkg "foo-bar-api-server-data";
+        "foo-bar-api-server-data-gen" = foo-barPkg "foo-bar-api-server-data-gen";
+        "foo-bar-api-server-gen" = foo-barPkg "foo-bar-api-server-gen";
+        "foo-bar-cli" = foo-barPkgWithComp "foo-bar" "foo-bar-cli";
+        "foo-bar-client" = foo-barPkg "foo-bar-client";
+        "foo-bar-client-data" = foo-barPkg "foo-bar-client-data";
+        "foo-bar-data" = foo-barPkg "foo-bar-data";
+        "foo-bar-data-gen" = foo-barPkg "foo-bar-data-gen";
       };
   haskellPackages =
     previous.haskellPackages.override (
@@ -87,7 +87,7 @@ with final.haskell.lib;
                   cursorBrickPkg = self.callCabal2nix "cursor-brick" (cursorBrickRepo + "/cursor-brick") {};
 
                 in
-                  final.foobarPackages // {
+                  final.foo-barPackages // {
                     envparse = envparsePkg;
                     cursor-brick = cursorBrickPkg;
                   }
