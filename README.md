@@ -33,11 +33,11 @@ All Rights Reserved.
 
 ## Instructions
 
-To use this template in a new project, choose the name for your project, for example `shelter`.
+To use this template in a new project, choose the name for your project, for example `homeless-shelter`.
 Then use [template-filler](https://github.com/NorfairKing/template-filler) to use the template, like this:
 
 ```
-template-filler --source /path/to/this/template-local-first-app-with-sync-server --destination /path/to/your/shelter --find Foo.Bar --replace Shelter
+template-filler --source /path/to/this/template-local-first-app-with-sync-server --destination /path/to/your/homelessshelter --find FooBar --replace HomelessShelter
 ```
 
 ### Template overview
