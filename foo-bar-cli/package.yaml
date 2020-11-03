@@ -17,8 +17,17 @@ library:
   - cookie
   - envparse
   - filelock
+  - foo-bar-api
+  - foo-bar-api-server-data
+  - foo-bar-client
+  - foo-bar-client-data
+  - foo-bar-data
   - http-client
   - http-client-tls
+  - mergeful
+  - mergeful-persistent
+  - mergeless
+  - mergeless-persistent
   - monad-logger
   - mtl
   - optparse-applicative
@@ -29,11 +38,6 @@ library:
   - servant
   - servant-auth-client
   - servant-client
-  - foo-bar-api
-  - foo-bar-api-server-data
-  - foo-bar-client
-  - foo-bar-client-data
-  - foo-bar-data
   - text
   - yaml
   - yamlparse-applicative

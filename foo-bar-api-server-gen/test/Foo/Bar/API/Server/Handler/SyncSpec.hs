@@ -13,5 +13,5 @@ spec = serverSpec
   $ describe "PostSync"
   $ it "does not crash"
   $ \cenv -> forAllValid $ \req -> withAnyNewUser cenv $ \token -> do
-    resp <- testClientOrErr cenv $ postSync fooBarClient token req
-    shouldBeValid resp
+    _ <- testClientOrErr cenv $ postSync fooBarClient token req
+    pure ()

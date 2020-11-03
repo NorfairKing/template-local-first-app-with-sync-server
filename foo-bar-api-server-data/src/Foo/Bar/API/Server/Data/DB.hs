@@ -13,6 +13,8 @@
 
 module Foo.Bar.API.Server.Data.DB where
 
+import Data.Mergeful
+import Data.Mergeful.Persistent ()
 import Data.Password
 import Data.Password.Instances ()
 import Data.Validity
@@ -36,9 +38,22 @@ User
   deriving Show Eq Ord Generic
 
 
-ServerAppendThing sql=append_thing
+ServerAppendfulThing sql=appendful_thing
   user UserId
   number Int
+
+  deriving Show Eq Ord Generic
+
+ServerMergelessThing sql=mergeless_thing
+  user UserId
+  number Int
+
+  deriving Show Eq Ord Generic
+
+ServerMergefulThing sql=mergeful_thing
+  user UserId
+  number Int
+  time ServerTime
 
   deriving Show Eq Ord Generic
 
@@ -55,14 +70,39 @@ instance Validity PassHash where
 
 instance Validity User
 
-instance Validity ServerAppendThing
+instance Validity ServerAppendfulThing
 
-serverMakeThing :: ServerAppendThing -> Thing
-serverMakeThing ServerAppendThing {..} = Thing {..}
-  where
-    thingNumber = serverAppendThingNumber
+instance Validity ServerMergelessThing
 
-makeServerAppendThing :: UserId -> Thing -> ServerAppendThing
-makeServerAppendThing serverAppendThingUser Thing {..} = ServerAppendThing {..}
+instance Validity ServerMergefulThing
+
+serverAppendfulMakeThing :: ServerAppendfulThing -> Thing
+serverAppendfulMakeThing ServerAppendfulThing {..} = Thing {..}
   where
-    serverAppendThingNumber = thingNumber
+    thingNumber = serverAppendfulThingNumber
+
+makeServerAppendfulThing :: UserId -> Thing -> ServerAppendfulThing
+makeServerAppendfulThing serverAppendfulThingUser Thing {..} = ServerAppendfulThing {..}
+  where
+    serverAppendfulThingNumber = thingNumber
+
+serverMergelessMakeThing :: ServerMergelessThing -> Thing
+serverMergelessMakeThing ServerMergelessThing {..} = Thing {..}
+  where
+    thingNumber = serverMergelessThingNumber
+
+makeServerMergelessThing :: UserId -> Thing -> ServerMergelessThing
+makeServerMergelessThing serverMergelessThingUser Thing {..} = ServerMergelessThing {..}
+  where
+    serverMergelessThingNumber = thingNumber
+
+serverMergefulMakeThing :: ServerMergefulThing -> Timed Thing
+serverMergefulMakeThing ServerMergefulThing {..} = Timed Thing {..} serverMergefulThingTime
+  where
+    thingNumber = serverMergefulThingNumber
+
+makeServerMergefulThing :: UserId -> Thing -> ServerMergefulThing
+makeServerMergefulThing serverMergefulThingUser Thing {..} = ServerMergefulThing {..}
+  where
+    serverMergefulThingTime = initialServerTime
+    serverMergefulThingNumber = thingNumber

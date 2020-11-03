@@ -12,12 +12,14 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
+  - foo-bar-api-server-data
+  - foo-bar-data
+  - mergeful
+  - mergeful-persistent
   - persistent
   - persistent-sqlite
   - persistent-template
   - safe
-  - foo-bar-api-server-data
-  - foo-bar-data
   - time
 
 tests:

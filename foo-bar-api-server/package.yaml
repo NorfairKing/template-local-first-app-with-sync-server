@@ -17,7 +17,14 @@ library:
     - appendful-persistent
     - bytestring
     - envparse
+    - foo-bar-api
+    - foo-bar-api-server-data
+    - foo-bar-data
     - jose
+    - mergeful
+    - mergeful-persistent
+    - mergeless
+    - mergeless-persistent
     - monad-logger
     - mtl
     - optparse-applicative
@@ -30,9 +37,6 @@ library:
     - persistent-template
     - servant-auth-server
     - servant-server
-    - foo-bar-api
-    - foo-bar-data
-    - foo-bar-api-server-data
     - text
     - time
     - wai

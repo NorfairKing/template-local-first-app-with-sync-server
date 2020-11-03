@@ -13,6 +13,8 @@ module Foo.Bar.API.Data where
 import Data.Aeson
 import qualified Data.Appendful as Appendful
 import Data.Functor.Contravariant
+import qualified Data.Mergeful as Mergeful
+import qualified Data.Mergeless as Mergeless
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Validity
@@ -87,7 +89,9 @@ instance ToJWT AuthCookie
 
 data SyncRequest
   = SyncRequest
-      { syncRequestThingSyncRequest :: Appendful.SyncRequest ClientAppendThingId ServerAppendThingId Thing
+      { syncRequestAppendfulThingSyncRequest :: Appendful.SyncRequest ClientAppendfulThingId ServerAppendfulThingId Thing,
+        syncRequestMergelessThingSyncRequest :: Mergeless.SyncRequest ClientMergelessThingId ServerMergelessThingId Thing,
+        syncRequestMergefulThingSyncRequest :: Mergeful.SyncRequest ClientMergefulThingId ServerMergefulThingId Thing
       }
   deriving (Show, Eq, Generic)
 
@@ -95,14 +99,24 @@ instance Validity SyncRequest
 
 instance FromJSON SyncRequest where
   parseJSON = withObject "SyncResponse" $ \o ->
-    SyncRequest <$> o .: "thing"
+    SyncRequest
+      <$> o .: "appendful"
+      <*> o .: "mergeless"
+      <*> o .: "mergeful"
 
 instance ToJSON SyncRequest where
-  toJSON SyncRequest {..} = object ["thing" .= syncRequestThingSyncRequest]
+  toJSON SyncRequest {..} =
+    object
+      [ "appendful" .= syncRequestAppendfulThingSyncRequest,
+        "mergeless" .= syncRequestMergelessThingSyncRequest,
+        "mergeful" .= syncRequestMergefulThingSyncRequest
+      ]
 
 data SyncResponse
   = SyncResponse
-      { syncResponseThingSyncResponse :: Appendful.SyncResponse ClientAppendThingId ServerAppendThingId Thing
+      { syncResponseAppendfulThingSyncResponse :: Appendful.SyncResponse ClientAppendfulThingId ServerAppendfulThingId Thing,
+        syncResponseMergelessThingSyncResponse :: Mergeless.SyncResponse ClientMergelessThingId ServerMergelessThingId Thing,
+        syncResponseMergefulThingSyncResponse :: Mergeful.SyncResponse ClientMergefulThingId ServerMergefulThingId Thing
       }
   deriving (Show, Eq, Generic)
 
@@ -110,10 +124,18 @@ instance Validity SyncResponse
 
 instance FromJSON SyncResponse where
   parseJSON = withObject "SyncResponse" $ \o ->
-    SyncResponse <$> o .: "thing"
+    SyncResponse
+      <$> o .: "appendful"
+      <*> o .: "mergeless"
+      <*> o .: "mergeful"
 
 instance ToJSON SyncResponse where
-  toJSON SyncResponse {..} = object ["thing" .= syncResponseThingSyncResponse]
+  toJSON SyncResponse {..} =
+    object
+      [ "appendful" .= syncResponseAppendfulThingSyncResponse,
+        "mergeless" .= syncResponseMergelessThingSyncResponse,
+        "mergeful" .= syncResponseMergefulThingSyncResponse
+      ]
 
 instance (PersistEntity a, ToBackendKey SqlBackend a) => ToJSONKey (Key a) where
   toJSONKey = contramap fromSqlKey toJSONKey

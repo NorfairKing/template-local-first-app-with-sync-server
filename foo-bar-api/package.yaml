@@ -14,14 +14,16 @@ library:
   dependencies:
     - aeson
     - appendful
+    - foo-bar-api-server-data
+    - foo-bar-client-data
+    - foo-bar-data
     - jose
+    - mergeful
+    - mergeless
     - persistent
     - servant
     - servant-auth
     - servant-auth-server
-    - foo-bar-client-data
-    - foo-bar-data
-    - foo-bar-api-server-data
     - text
     - validity
     - validity-text

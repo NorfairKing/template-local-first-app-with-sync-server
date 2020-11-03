@@ -14,12 +14,13 @@ library:
   dependencies:
     - QuickCheck
     - bytestring
+    - foo-bar-api-server-data
+    - foo-bar-data-gen
     - genvalidity
+    - genvalidity-mergeful
     - genvalidity-persistent
     - genvalidity-text
     - password
-    - foo-bar-data-gen
-    - foo-bar-api-server-data
     - text
 
 tests:
