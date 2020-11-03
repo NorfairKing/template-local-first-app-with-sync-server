@@ -87,7 +87,7 @@ instance ToJWT AuthCookie
 
 data SyncRequest
   = SyncRequest
-      { syncRequestThingSyncRequest :: Appendful.SyncRequest ClientThingId ServerThingId Thing
+      { syncRequestThingSyncRequest :: Appendful.SyncRequest ClientAppendThingId ServerAppendThingId Thing
       }
   deriving (Show, Eq, Generic)
 
@@ -102,7 +102,7 @@ instance ToJSON SyncRequest where
 
 data SyncResponse
   = SyncResponse
-      { syncResponseThingSyncResponse :: Appendful.SyncResponse ClientThingId ServerThingId Thing
+      { syncResponseThingSyncResponse :: Appendful.SyncResponse ClientAppendThingId ServerAppendThingId Thing
       }
   deriving (Show, Eq, Generic)
 

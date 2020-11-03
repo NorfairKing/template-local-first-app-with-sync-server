@@ -32,6 +32,6 @@ instance GenValid User where
   genValid = genValidStructurally
   shrinkValid = shrinkValidStructurally
 
-instance GenValid ServerThing where
+instance GenValid ServerAppendThing where
   genValid = genValidStructurally
   shrinkValid = shrinkValidStructurally

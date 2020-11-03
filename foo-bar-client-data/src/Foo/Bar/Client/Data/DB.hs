@@ -20,24 +20,24 @@ share
   [mkPersist sqlSettings, mkMigrate "clientMigration"]
   [persistLowerCase|
 
-ClientThing sql=thing
+ClientAppendThing sql=append_thing
     number Int
-    serverId ServerThingId Maybe
+    serverId ServerAppendThingId Maybe
     deriving Show Eq
 |]
 
-clientMakeThing :: ClientThing -> Thing
-clientMakeThing ClientThing {..} = Thing {..}
+clientMakeThing :: ClientAppendThing -> Thing
+clientMakeThing ClientAppendThing {..} = Thing {..}
   where
-    thingNumber = clientThingNumber
+    thingNumber = clientAppendThingNumber
 
-makeSyncedClientThing :: ServerThingId -> Thing -> ClientThing
-makeSyncedClientThing sid = makeClientThing (Just sid)
+makeSyncedClientAppendThing :: ServerAppendThingId -> Thing -> ClientAppendThing
+makeSyncedClientAppendThing sid = makeClientAppendThing (Just sid)
 
-makeUnsyncedClientThing :: Thing -> ClientThing
-makeUnsyncedClientThing = makeClientThing Nothing
+makeUnsyncedClientAppendThing :: Thing -> ClientAppendThing
+makeUnsyncedClientAppendThing = makeClientAppendThing Nothing
 
-makeClientThing :: Maybe ServerThingId -> Thing -> ClientThing
-makeClientThing clientThingServerId Thing {..} = ClientThing {..}
+makeClientAppendThing :: Maybe ServerAppendThingId -> Thing -> ClientAppendThing
+makeClientAppendThing clientAppendThingServerId Thing {..} = ClientAppendThing {..}
   where
-    clientThingNumber = thingNumber
+    clientAppendThingNumber = thingNumber

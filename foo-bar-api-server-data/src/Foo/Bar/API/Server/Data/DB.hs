@@ -36,7 +36,7 @@ User
   deriving Show Eq Ord Generic
 
 
-ServerThing sql=thing
+ServerAppendThing sql=append_thing
   user UserId
   number Int
 
@@ -55,14 +55,14 @@ instance Validity PassHash where
 
 instance Validity User
 
-instance Validity ServerThing
+instance Validity ServerAppendThing
 
-serverMakeThing :: ServerThing -> Thing
-serverMakeThing ServerThing {..} = Thing {..}
+serverMakeThing :: ServerAppendThing -> Thing
+serverMakeThing ServerAppendThing {..} = Thing {..}
   where
-    thingNumber = serverThingNumber
+    thingNumber = serverAppendThingNumber
 
-makeServerThing :: UserId -> Thing -> ServerThing
-makeServerThing serverThingUser Thing {..} = ServerThing {..}
+makeServerAppendThing :: UserId -> Thing -> ServerAppendThing
+makeServerAppendThing serverAppendThingUser Thing {..} = ServerAppendThing {..}
   where
-    serverThingNumber = thingNumber
+    serverAppendThingNumber = thingNumber
