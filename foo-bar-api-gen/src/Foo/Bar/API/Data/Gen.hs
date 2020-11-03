@@ -15,3 +15,11 @@ instance GenValid RegistrationForm where
 instance GenValid LoginForm where
   genValid = genValidStructurally
   shrinkValid = shrinkValidStructurally
+
+instance GenValid SyncRequest where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid SyncResponse where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering

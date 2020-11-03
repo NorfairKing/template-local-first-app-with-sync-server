@@ -24,6 +24,18 @@ extra-deps:
   - appendful
   - appendful-persistent
   - genvalidity-appendful
+- github: NorfairKing/mergeless
+  commit: 39191fea2885ccd6dc4aa5deeb578be179e9659f
+  subdirs:
+  - mergeless
+  - mergeless-persistent
+  - genvalidity-mergeless
+- github: NorfairKing/mergeful
+  commit: 539ea04691309fb3f74461344ebdf389dc535a55
+  subdirs:
+  - mergeful
+  - mergeful-persistent
+  - genvalidity-mergeful
 - servant-auth-client-0.4.1.0@sha256:a93f041c3c293eca6e2e2e1a2ed97e58fbbd0e123caeff9e484a68d56272632f,3342
 - base16-0.3.0.1@sha256:9ceab7e77e998c4324c11e4fae884fe11dceaba354bd291dab6913898420cce7,2422
 

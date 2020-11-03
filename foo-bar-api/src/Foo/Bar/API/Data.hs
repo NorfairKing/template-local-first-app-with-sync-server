@@ -85,9 +85,35 @@ instance FromJWT AuthCookie
 
 instance ToJWT AuthCookie
 
-type SyncRequest = Appendful.SyncRequest ClientThingId ServerThingId Thing
+data SyncRequest
+  = SyncRequest
+      { syncRequestThingSyncRequest :: Appendful.SyncRequest ClientThingId ServerThingId Thing
+      }
+  deriving (Show, Eq, Generic)
 
-type SyncResponse = Appendful.SyncResponse ClientThingId ServerThingId Thing
+instance Validity SyncRequest
+
+instance FromJSON SyncRequest where
+  parseJSON = withObject "SyncResponse" $ \o ->
+    SyncRequest <$> o .: "thing"
+
+instance ToJSON SyncRequest where
+  toJSON SyncRequest {..} = object ["thing" .= syncRequestThingSyncRequest]
+
+data SyncResponse
+  = SyncResponse
+      { syncResponseThingSyncResponse :: Appendful.SyncResponse ClientThingId ServerThingId Thing
+      }
+  deriving (Show, Eq, Generic)
+
+instance Validity SyncResponse
+
+instance FromJSON SyncResponse where
+  parseJSON = withObject "SyncResponse" $ \o ->
+    SyncResponse <$> o .: "thing"
+
+instance ToJSON SyncResponse where
+  toJSON SyncResponse {..} = object ["thing" .= syncResponseThingSyncResponse]
 
 instance (PersistEntity a, ToBackendKey SqlBackend a) => ToJSONKey (Key a) where
   toJSONKey = contramap fromSqlKey toJSONKey
