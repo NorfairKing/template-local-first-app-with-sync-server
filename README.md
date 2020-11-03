@@ -4,9 +4,13 @@ This is a template implementation of command-line local-first application with a
 It features complete option parsing, like in [template-optparse](https://github.com/NorfairKing/template-optparse), a command-line tool like in [template-cli](https://github.com/NorfairKing/template-cli), an api server like in [template-api-server-with-auth-and-cli](https://github.com/NorfairKing/template-api-server-with-auth-and-cli) as well as a full synchronisation implementation.
 Both the server and the client use Sqlite to store the data that they synchronise.
 
-* Haskell code for an api-server
+* Haskell code for an API-server
 * Haskell code for an accompanying command-line tool
 * Haskell code for an implementation of synchronisation between those two.
+  There types of synchronisation examples are implemented:
+  * Append-only items
+  * Immutable items
+  * Mutable items with safe merge conflicts
 * Database definitions for both the server and the client
 * Per-route integration tests for the API server
 * Per-command integration test for the CLI tool
@@ -76,6 +80,22 @@ This template contains these haskell packages and notable modules:
   - `Foo.Bar.CLI.Command.Sync`: The client-side implementation of synchronisation.
 
 ![Dependency graph](dependencies.png)
+
+### Synchronisation examples
+
+This template features three types of synchronisation:
+
+* Append-only items via [`appendful`](https://github.com/NorfairKing/appendful)
+* Immutable items via [`mergeless`](https://github.com/NorfairKing/mergeless)
+* Mutable items with safe merge conflicts via [`mergeful`](https://github.com/NorfairKing/mergeful)
+
+There is one example for each. Find the details here:
+
+* The request and response type definitions in `Foo.Bar.API.Data`
+* The server implementation in `Foo.Bar.API.Server.Handler.Sync`
+* The client implementation in `Foo.Bar.CLI.Commands.Sync`
+
+You can delete whichever of these you do not need, and use the others.
 
 ### OptParse
 
@@ -150,9 +170,9 @@ Then put its signing key in the 'Secrets' part of your repository on github.
 
 To add another piece to synchronise on, first you need to make the following design decision to figure out which syncing library to use:
 
-1. Should it be possible to modify the items? If so, use [mergeful](https://github.com/NorfairKing/mergeful)
-2. If not, should it be possible to delete the items? If so, use [mergeless](https://github.com/NorfairKing/mergeless)
-3. If not, the data is add-only, so use [appendful](https://github.com/NorfairKing/appendful)
+1. Should it be possible to modify the items? If so, use [mergeful](https://github.com/NorfairKing/mergeful) like the `ServerAppendfulThing` example.
+2. If not, should it be possible to delete the items? If so, use [mergeless](https://github.com/NorfairKing/mergeless) like the `ServerMergelessThing` example.
+3. If not, the data is add-only, so use [appendful](https://github.com/NorfairKing/appendful) like the `ServerMergefulThing` example.
 
 Then  make the following changes:
 
