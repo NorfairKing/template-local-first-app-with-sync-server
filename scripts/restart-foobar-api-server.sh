@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 
-killall foobar-api-server || true
+killall foo-bar-api-server || true
 
-foobar-api-server &
+foo-bar-api-server &

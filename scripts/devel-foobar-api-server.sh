@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-stack install foobar-api-server \
+stack install foo-bar-api-server \
   --file-watch \
-  --exec='./scripts/restart-foobar-api-server.sh'
+  --exec='./scripts/restart-foo-bar-api-server.sh'
