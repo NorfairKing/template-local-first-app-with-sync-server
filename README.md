@@ -116,8 +116,9 @@ In `nix/nixpkgs-version.nix`, we pin a `nixpkgs` commit.
 In `nix/pkgs.nix` we define our own 'version' of the `nixpkgs` by adding our own overlays.
 The project overlay is defined in `nix/overlay.nix`.
 
-In `nix/module.nix`, we define a nixos module for hosting the sync server.
-In `nix/program.nix`, we define a nix home manager module for using the project on nixos with automatic syncing.
+In `nix/nixos-module.nix`, we define a nixos module for hosting the sync server.
+In `nix/home-manager-module.nix`, we define a nix home manager module for using the project on NixOS with automatic syncing.
+In `nix/nixos-module-test.nix`, both of those are tested. This test is not run on CI because GitHub actions does not support it.
 
 See the instructions in `nix/overlay.nix` for more details.
 

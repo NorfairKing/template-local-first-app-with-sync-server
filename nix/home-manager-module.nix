@@ -56,9 +56,10 @@ in
     };
   config =
     let
-      foo-barPkgs = (import ./pkgs.nix).foo-barPackages;
+      fooBarPkgs = (import ./pkgs.nix).fooBarPackages;
       configContents = cfg: ''
         
+${cfg.extraConfig}
 
       '';
       syncConfigContents = syncCfg:
@@ -71,43 +72,43 @@ password: "${cfg.sync.password}"
       '';
 
 
-      syncFoo/BarName = "sync-foo-bar";
-      syncFoo/BarService =
-      {
-      Unit =
+      syncFooBarName = "sync-foo-bar";
+      syncFooBarService =
         {
-          Description = "Sync foo-bar";
-          Wants = [ "network-online.target" ];
+          Unit =
+            {
+              Description = "Sync foo-bar";
+              Wants = [ "network-online.target" ];
+            };
+          Service =
+            {
+              ExecStart =
+                "${pkgs.writeShellScript "sync-foo-bar-service-ExecStart"
+                  ''
+                    exec ${fooBarPkgs.foo-bar-cli}/bin/foo-bar sync
+                  ''}";
+              Type = "oneshot";
+            };
         };
-      Service =
+      syncFooBarTimer =
         {
-          ExecStart =
-            "${pkgs.writeShellScript "sync-foo-bar-service-ExecStart"
-              ''
-                exec ${foo-barPkgs.foo-bar-cli}/bin/foo-bar sync
-              ''}";
-          Type = "oneshot";
+          Unit =
+            {
+              Description = "Sync foo-bar every day";
+            };
+          Install =
+            {
+              WantedBy = [ "timers.target" ];
+            };
+          Timer =
+            {
+              OnCalendar = "daily";
+              Persistent = true;
+              Unit = "${syncFooBarName}.service";
+            };
         };
-      };
-      syncFoo/BarTimer =
-      {
-      Unit =
-        {
-          Description = "Sync foo-bar every day";
-        };
-      Install =
-        {
-          WantedBy = [ "timers.target" ];
-        };
-      Timer =
-        {
-          OnCalendar = "daily";
-          Persistent = true;
-          Unit = "${syncFoo/BarName}.service";
-        };
-      };
 
-      foo-barConfigContents =
+      fooBarConfigContents =
         concatStringsSep "\n" [
           (configContents cfg)
           (syncConfigContents cfg.sync)
@@ -116,25 +117,25 @@ password: "${cfg.sync.password}"
       services =
         (
           optionalAttrs (cfg.sync.enable or false) {
-            "${syncFoo/BarName}" = syncFoo/BarService;
+            "${syncFooBarName}" = syncFooBarService;
           }
         );
       timers =
         (
           optionalAttrs (cfg.sync.enable or false) {
-            "${syncFoo/BarName}" = syncFoo/BarTimer;
+            "${syncFooBarName}" = syncFooBarTimer;
           }
         );
       packages =
         [
-          foo-barPkgs.foo-bar-cli
+          fooBarPkgs.foo-bar-cli
         ];
 
 
     in
       mkIf cfg.enable {
         xdg = {
-          configFile."foo-bar/config.yaml".text = foo-barConfigContents;
+          configFile."foo-bar/config.yaml".text = fooBarConfigContents;
         };
         systemd.user =
           {
