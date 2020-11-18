@@ -37,9 +37,9 @@ combineToSettings :: Flags -> Environment -> Maybe Configuration -> IO Settings
 combineToSettings Flags {..} Environment {..} mConf = do
   let settingPort = fromMaybe 8000 $ flagPort <|> envPort <|> mc configPort
   settingDbFile <- case flagDbFile <|> envDbFile <|> mc configDbFile of
-    Nothing -> resolveFile' "fooBar.sqlite3"
+    Nothing -> resolveFile' "foo-bar.sqlite3"
     Just dbf -> resolveFile' dbf
-  settingSigningKeyFile <- resolveFile' "signing-key.json"
+  settingSigningKeyFile <- resolveFile' "signing-key.dat"
   pure Settings {..}
   where
     mc :: (Configuration -> Maybe a) -> Maybe a
