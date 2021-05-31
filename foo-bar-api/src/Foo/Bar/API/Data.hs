@@ -4,7 +4,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -27,11 +26,10 @@ import Foo.Bar.Data
 import Servant.API.Generic
 import Servant.Auth.Server
 
-data RegistrationForm
-  = RegistrationForm
-      { registrationFormUsername :: Username,
-        registrationFormPassword :: Text
-      }
+data RegistrationForm = RegistrationForm
+  { registrationFormUsername :: Username,
+    registrationFormPassword :: Text
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity RegistrationForm where
@@ -53,11 +51,10 @@ instance FromJSON RegistrationForm where
     withObject "RegistrationForm" $ \o ->
       RegistrationForm <$> o .: "name" <*> o .: "password"
 
-data LoginForm
-  = LoginForm
-      { loginFormUsername :: Username,
-        loginFormPassword :: Text
-      }
+data LoginForm = LoginForm
+  { loginFormUsername :: Username,
+    loginFormPassword :: Text
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity LoginForm
@@ -73,10 +70,9 @@ instance ToJSON LoginForm where
         "password" .= loginFormPassword
       ]
 
-data AuthCookie
-  = AuthCookie
-      { authCookieUsername :: Username
-      }
+data AuthCookie = AuthCookie
+  { authCookieUsername :: Username
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance FromJSON AuthCookie
@@ -87,12 +83,11 @@ instance FromJWT AuthCookie
 
 instance ToJWT AuthCookie
 
-data SyncRequest
-  = SyncRequest
-      { syncRequestAppendfulThingSyncRequest :: Appendful.SyncRequest ClientAppendfulThingId ServerAppendfulThingId Thing,
-        syncRequestMergelessThingSyncRequest :: Mergeless.SyncRequest ClientMergelessThingId ServerMergelessThingId Thing,
-        syncRequestMergefulThingSyncRequest :: Mergeful.SyncRequest ClientMergefulThingId ServerMergefulThingId Thing
-      }
+data SyncRequest = SyncRequest
+  { syncRequestAppendfulThingSyncRequest :: Appendful.SyncRequest ClientAppendfulThingId ServerAppendfulThingId Thing,
+    syncRequestMergelessThingSyncRequest :: Mergeless.SyncRequest ClientMergelessThingId ServerMergelessThingId Thing,
+    syncRequestMergefulThingSyncRequest :: Mergeful.SyncRequest ClientMergefulThingId ServerMergefulThingId Thing
+  }
   deriving (Show, Eq, Generic)
 
 instance Validity SyncRequest
@@ -112,12 +107,11 @@ instance ToJSON SyncRequest where
         "mergeful" .= syncRequestMergefulThingSyncRequest
       ]
 
-data SyncResponse
-  = SyncResponse
-      { syncResponseAppendfulThingSyncResponse :: Appendful.SyncResponse ClientAppendfulThingId ServerAppendfulThingId Thing,
-        syncResponseMergelessThingSyncResponse :: Mergeless.SyncResponse ClientMergelessThingId ServerMergelessThingId Thing,
-        syncResponseMergefulThingSyncResponse :: Mergeful.SyncResponse ClientMergefulThingId ServerMergefulThingId Thing
-      }
+data SyncResponse = SyncResponse
+  { syncResponseAppendfulThingSyncResponse :: Appendful.SyncResponse ClientAppendfulThingId ServerAppendfulThingId Thing,
+    syncResponseMergelessThingSyncResponse :: Mergeless.SyncResponse ClientMergelessThingId ServerMergelessThingId Thing,
+    syncResponseMergefulThingSyncResponse :: Mergeful.SyncResponse ClientMergefulThingId ServerMergefulThingId Thing
+  }
   deriving (Show, Eq, Generic)
 
 instance Validity SyncResponse

@@ -1,39 +1,19 @@
+{ sources ? import ./sources.nix
+}:
 let
-  pkgsv = import (import ./nixpkgs.nix);
-  pkgs = pkgsv {};
-  validity-overlay =
-    import (
-      pkgs.fetchFromGitHub (import ./validity-version.nix) + "/nix/overlay.nix"
-    );
-  appendful-overlay =
-    import (
-      pkgs.fetchFromGitHub (import ./appendful-version.nix) + "/nix/overlay.nix"
-    );
-  mergeless-overlay =
-    import (
-      pkgs.fetchFromGitHub (import ./mergeless-version.nix) + "/nix/overlay.nix"
-    );
-  mergeful-overlay =
-    import (
-      pkgs.fetchFromGitHub (import ./mergeful-version.nix) + "/nix/overlay.nix"
-    );
-  yamlparse-applicative-overlay =
-    import (
-      pkgs.fetchFromGitHub (import ./yamlparse-applicative-version.nix) + "/nix/overlay.nix"
-    );
-  hastoryPkgs =
-    pkgsv {
-      overlays =
-        [
-          validity-overlay
-          appendful-overlay
-          mergeless-overlay
-          mergeful-overlay
-          yamlparse-applicative-overlay
-          (import ./gitignore-src.nix)
-          (import ./overlay.nix)
-        ];
-      config.allowUnfree = true;
-    };
+  pkgsf = import sources.nixpkgs;
 in
-hastoryPkgs
+pkgsf {
+  overlays =
+    [
+      (import (sources.appendful + "/nix/overlay.nix"))
+      (import (sources.mergeful + "/nix/overlay.nix"))
+      (import (sources.mergeless + "/nix/overlay.nix"))
+      (import (sources.safe-coloured-text + "/nix/overlay.nix"))
+      (import (sources.validity + "/nix/overlay.nix"))
+      (import (sources.yamlparse-applicative + "/nix/overlay.nix"))
+      (final: previous: { inherit (import sources.gitignore { inherit (final) lib; }) gitignoreSource; })
+      (import ./overlay.nix)
+    ];
+  config.allowUnfree = true;
+}

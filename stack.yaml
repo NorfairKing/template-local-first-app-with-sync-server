@@ -1,4 +1,4 @@
-resolver: lts-15.15
+resolver: lts-16.12
 packages:
 - foo-bar-api
 - foo-bar-api-gen
@@ -79,7 +79,4 @@ extra-deps:
 
 
 nix:
-  packages:
-    - zlib
-    - haskellPackages.autoexporter
-    - killall
+  shell-file: shell.nix

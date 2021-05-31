@@ -8,10 +8,9 @@ import Data.Aeson
 import Data.Validity
 import GHC.Generics (Generic)
 
-data Thing
-  = Thing
-      { thingNumber :: !Int
-      }
+data Thing = Thing
+  { thingNumber :: !Int
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity Thing

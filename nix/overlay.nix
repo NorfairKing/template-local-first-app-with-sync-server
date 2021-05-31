@@ -6,34 +6,36 @@ with final.haskell.lib;
     let
       fooBarPkg =
         name:
-          doBenchmark (
-            addBuildDepend (
+        doBenchmark (
+          addBuildDepend
+            (
               failOnAllWarnings (
                 disableLibraryProfiling (
-                  final.haskellPackages.callCabal2nix name (final.gitignoreSource (../. + "/${name}")) {}
+                  final.haskellPackages.callCabal2nix name (final.gitignoreSource (../. + "/${name}")) { }
                 )
               )
-            ) (final.haskellPackages.autoexporter)
-          );
+            )
+            (final.haskellPackages.autoexporter)
+        );
       fooBarPkgWithComp =
         exeName: name:
-          generateOptparseApplicativeCompletion exeName (fooBarPkg name);
+        generateOptparseApplicativeCompletion exeName (fooBarPkg name);
       fooBarPkgWithOwnComp = name: fooBarPkgWithComp name name;
 
     in
-      {
-        "foo-bar-api" = fooBarPkg "foo-bar-api";
-        "foo-bar-api-gen" = fooBarPkg "foo-bar-api-gen";
-        "foo-bar-api-server" = fooBarPkgWithOwnComp "foo-bar-api-server";
-        "foo-bar-api-server-gen" = fooBarPkg "foo-bar-api-server-gen";
-        "foo-bar-api-server-data" = fooBarPkg "foo-bar-api-server-data";
-        "foo-bar-api-server-data-gen" = fooBarPkg "foo-bar-api-server-data-gen";
-        "foo-bar-cli" = fooBarPkgWithComp "foo-bar" "foo-bar-cli";
-        "foo-bar-client" = fooBarPkg "foo-bar-client";
-        "foo-bar-client-data" = fooBarPkg "foo-bar-client-data";
-        "foo-bar-data" = fooBarPkg "foo-bar-data";
-        "foo-bar-data-gen" = fooBarPkg "foo-bar-data-gen";
-      };
+    {
+      "foo-bar-api" = fooBarPkg "foo-bar-api";
+      "foo-bar-api-gen" = fooBarPkg "foo-bar-api-gen";
+      "foo-bar-api-server" = fooBarPkgWithOwnComp "foo-bar-api-server";
+      "foo-bar-api-server-gen" = fooBarPkg "foo-bar-api-server-gen";
+      "foo-bar-api-server-data" = fooBarPkg "foo-bar-api-server-data";
+      "foo-bar-api-server-data-gen" = fooBarPkg "foo-bar-api-server-data-gen";
+      "foo-bar-cli" = fooBarPkgWithComp "foo-bar" "foo-bar-cli";
+      "foo-bar-client" = fooBarPkg "foo-bar-client";
+      "foo-bar-client-data" = fooBarPkg "foo-bar-client-data";
+      "foo-bar-data" = fooBarPkg "foo-bar-data";
+      "foo-bar-data-gen" = fooBarPkg "foo-bar-data-gen";
+    };
 
   fooBarRelease =
     final.symlinkJoin {
@@ -45,15 +47,17 @@ with final.haskell.lib;
   haskellPackages =
     previous.haskellPackages.override (
       old:
-        {
-          overrides =
-            final.lib.composeExtensions (
+      {
+        overrides =
+          final.lib.composeExtensions
+            (
               old.overrides or (
                 _:
                 _:
-                  {}
+                { }
               )
-            ) (
+            )
+            (
               self: super:
                 let
                   # envparse
@@ -67,7 +71,7 @@ with final.haskell.lib;
                     };
                   envparsePkg =
                     dontCheck (
-                      self.callCabal2nix "envparse" envparseRepo {}
+                      self.callCabal2nix "envparse" envparseRepo { }
                     );
                   base16Repo =
                     final.fetchFromGitHub {
@@ -76,14 +80,14 @@ with final.haskell.lib;
                       rev = "f340b4a9a496320010930368e503ba6b7907f725";
                       sha256 = "sha256:1c6910h9y3nmj2277d7bif3nilgacp4qafl4g5b3r2c0295hbq7z";
                     };
-                  base16Pkg = self.callCabal2nix "base16" base16Repo {};
+                  base16Pkg = self.callCabal2nix "base16" base16Repo { };
 
                 in
-                  final.fooBarPackages // {
-                    envparse = envparsePkg;
-                    base16 = base16Pkg;
-                  }
+                final.fooBarPackages // {
+                  envparse = envparsePkg;
+                  base16 = base16Pkg;
+                }
             );
-        }
+      }
     );
 }
