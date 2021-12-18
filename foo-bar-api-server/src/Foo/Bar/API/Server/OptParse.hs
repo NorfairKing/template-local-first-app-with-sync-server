@@ -70,7 +70,7 @@ getConfiguration Flags {..} Environment {..} =
 
 defaultConfigFile :: IO (Path Abs File)
 defaultConfigFile = do
-  xdgConfigDir <- getXdgDir XdgConfig (Just [reldir|optparse-fooBar|])
+  xdgConfigDir <- getXdgDir XdgConfig (Just [reldir|foo-bar|])
   resolveFile xdgConfigDir "config.yaml"
 
 data Environment = Environment

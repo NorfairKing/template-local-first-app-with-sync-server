@@ -4,7 +4,6 @@
 module Foo.Bar.API.Server.Handler.Auth where
 
 import Control.Monad.IO.Class
-import Data.Password
 import Data.Password.Bcrypt
 import qualified Data.Text.Encoding as TE
 import Foo.Bar.API.Server.Handler.Import

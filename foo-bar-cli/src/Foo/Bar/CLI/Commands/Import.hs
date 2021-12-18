@@ -6,6 +6,6 @@ import Foo.Bar.API as X
 import Foo.Bar.API.Data as X
 import Foo.Bar.CLI.Env as X
 import Foo.Bar.CLI.OptParse as X
-import Foo.Bar.Client as X
+import Foo.Bar.Client as X hiding (Unique)
 import Foo.Bar.Client.Data as X
 import Foo.Bar.Data as X

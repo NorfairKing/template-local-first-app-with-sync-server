@@ -14,4 +14,4 @@ import Test.Validity.Aeson
 spec :: Spec
 spec = do
   genValidSpec @Thing
-  jsonSpecOnValid @Thing
+  jsonSpec @Thing

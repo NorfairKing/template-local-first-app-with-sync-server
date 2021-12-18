@@ -1,9 +1,11 @@
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Foo.Bar.API.Server.Data.Username where
 
+import Autodocodec
+import Control.Arrow (left)
 import Data.Aeson
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -12,12 +14,12 @@ import Data.Validity.Text ()
 import Database.Persist
 import Database.Persist.Sql
 import GHC.Generics (Generic)
-import YamlParse.Applicative
 
 newtype Username = Username
   { usernameText :: Text
   }
-  deriving (Show, Eq, Ord, Generic, FromJSONKey, ToJSONKey, FromJSON, ToJSON)
+  deriving (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec Username)
 
 instance Validity Username where
   validate (Username t) =
@@ -27,18 +29,16 @@ instance Validity Username where
       ]
 
 instance PersistField Username where
-  toPersistValue (Username t) = PersistText t
-  fromPersistValue (PersistText t) =
-    case parseUsername t of
-      Nothing -> Left "Text isn't a valid username"
-      Just un -> Right un
-  fromPersistValue _ = Left "Not text"
+  toPersistValue = toPersistValue . usernameText
+  fromPersistValue pv = do
+    t <- fromPersistValue pv
+    left T.pack $ parseUsernameOrErr t
 
 instance PersistFieldSql Username where
   sqlType _ = SqlString
 
-instance YamlSchema Username where
-  yamlSchema = eitherParser parseUsernameOrErr yamlSchema
+instance HasCodec Username where
+  codec = bimapCodec parseUsernameOrErr usernameText codec
 
 parseUsername :: Text -> Maybe Username
 parseUsername = constructValid . Username

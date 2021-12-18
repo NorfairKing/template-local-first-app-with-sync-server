@@ -9,9 +9,9 @@ with final.haskell.lib;
         doBenchmark (
           addBuildDepend
             (
-              failOnAllWarnings (
+              buildStrictly (
                 disableLibraryProfiling (
-                  final.haskellPackages.callCabal2nix name (final.gitignoreSource (../. + "/${name}")) { }
+                  final.haskellPackages.callCabal2nixWithOptions name (final.gitignoreSource (../. + "/${name}")) "--no-hpack" { }
                 )
               )
             )
@@ -40,7 +40,7 @@ with final.haskell.lib;
   fooBarRelease =
     final.symlinkJoin {
       name = "foo-bar-release";
-      paths = final.lib.attrValues final.fooBarPackages;
+      paths = builtins.map justStaticExecutables (final.lib.attrValues final.fooBarPackages);
     };
 
 
@@ -58,35 +58,7 @@ with final.haskell.lib;
               )
             )
             (
-              self: super:
-                let
-                  # envparse
-                  envparseRepo =
-                    final.fetchFromGitHub {
-                      owner = "supki";
-                      repo = "envparse";
-                      rev = "de5944fb09e9d941fafa35c0f05446af348e7b4d";
-                      sha256 =
-                        "sha256:0piljyzplj3bjylnxqfl4zpc3vc88i9fjhsj06bk7xj48dv3jg3b";
-                    };
-                  envparsePkg =
-                    dontCheck (
-                      self.callCabal2nix "envparse" envparseRepo { }
-                    );
-                  base16Repo =
-                    final.fetchFromGitHub {
-                      owner = "emilypi";
-                      repo = "base16";
-                      rev = "f340b4a9a496320010930368e503ba6b7907f725";
-                      sha256 = "sha256:1c6910h9y3nmj2277d7bif3nilgacp4qafl4g5b3r2c0295hbq7z";
-                    };
-                  base16Pkg = self.callCabal2nix "base16" base16Repo { };
-
-                in
-                final.fooBarPackages // {
-                  envparse = envparsePkg;
-                  base16 = base16Pkg;
-                }
+              self: super: final.fooBarPackages
             );
       }
     );
