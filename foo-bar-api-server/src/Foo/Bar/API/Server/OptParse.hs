@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeApplications #-}
 
@@ -69,9 +68,7 @@ getConfiguration Flags {..} Environment {..} =
       YamlParse.readConfigFile afp
 
 defaultConfigFile :: IO (Path Abs File)
-defaultConfigFile = do
-  xdgConfigDir <- getXdgDir XdgConfig (Just [reldir|foo-bar|])
-  resolveFile xdgConfigDir "config.yaml"
+defaultConfigFile = resolveFile' "config.yaml"
 
 data Environment = Environment
   { envConfigFile :: Maybe FilePath,
