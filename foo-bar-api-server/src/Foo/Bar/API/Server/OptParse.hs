@@ -5,17 +5,17 @@
 
 module Foo.Bar.API.Server.OptParse where
 
+import Autodocodec
+import Autodocodec.Yaml
 import Control.Applicative
 import Data.Maybe
 import qualified Data.Text as T
-import Data.Yaml
 import qualified Env
 import GHC.Generics (Generic)
 import Options.Applicative as OptParse
 import qualified Options.Applicative.Help as OptParse (string)
 import Path
 import Path.IO
-import YamlParse.Applicative as YamlParse
 
 getSettings :: IO Settings
 getSettings = do
@@ -49,23 +49,22 @@ data Configuration = Configuration
   }
   deriving (Show, Eq, Generic)
 
-instance FromJSON Configuration where
-  parseJSON = viaYamlSchema
-
-instance YamlSchema Configuration where
-  yamlSchema =
-    objectParser "Configuration" $
+instance HasCodec Configuration where
+  codec =
+    object "Configuration" $
       Configuration
         <$> optionalField "port" "The port to serve api requests on"
+          .= configPort
         <*> optionalField "database" "Path to the database"
+          .= configDbFile
 
 getConfiguration :: Flags -> Environment -> IO (Maybe Configuration)
 getConfiguration Flags {..} Environment {..} =
   case flagConfigFile <|> envConfigFile of
-    Nothing -> defaultConfigFile >>= YamlParse.readConfigFile
+    Nothing -> defaultConfigFile >>= readYamlConfigFile
     Just cf -> do
       afp <- resolveFile' cf
-      YamlParse.readConfigFile afp
+      readYamlConfigFile afp
 
 defaultConfigFile :: IO (Path Abs File)
 defaultConfigFile = resolveFile' "config.yaml"
@@ -111,7 +110,7 @@ flagsParser =
         [ Env.helpDoc environmentParser,
           "",
           "Configuration file format:",
-          T.unpack (YamlParse.prettyColourisedSchemaDoc @Configuration)
+          T.unpack (renderColouredSchemaViaCodec @Configuration)
         ]
 
 data Flags = Flags

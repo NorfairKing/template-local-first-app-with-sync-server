@@ -1,27 +1,25 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 
 module Foo.Bar.Data.Thing where
 
-import Data.Aeson
+import Autodocodec
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Validity
 import GHC.Generics (Generic)
 
 data Thing = Thing
   { thingNumber :: !Int
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec Thing)
 
 instance Validity Thing
 
-instance FromJSON Thing where
-  parseJSON = withObject "Thing" $ \o ->
-    Thing
-      <$> o .: "number"
-
-instance ToJSON Thing where
-  toJSON Thing {..} =
-    object
-      [ "number" .= thingNumber
-      ]
+instance HasCodec Thing where
+  codec =
+    object "Thing" $
+      Thing
+        <$> requiredField "number" "thing number"
+          .= thingNumber

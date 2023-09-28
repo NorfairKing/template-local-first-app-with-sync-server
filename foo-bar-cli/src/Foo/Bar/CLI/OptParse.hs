@@ -26,7 +26,6 @@ import Control.Monad.Logger
 import Data.Maybe
 import Data.Text (Text)
 import qualified Data.Text as T
-import qualified Data.Text.Encoding as TE
 import Data.Yaml (FromJSON, ToJSON)
 import qualified Env
 import Foo.Bar.API.Server.Data
@@ -118,12 +117,18 @@ instance HasCodec Configuration where
   codec =
     object "Configuration" $
       Configuration
-        <$> optionalFieldWith "server-url" (bimapCodec (left show . parseBaseUrl) showBaseUrl codec) "Server base url" .= configBaseUrl
-        <*> optionalField "username" "Server account username" .= configUsername
-        <*> optionalField "password" "Server account password" .= configPassword
-        <*> optionalField "database" "The path to the database" .= configDbFile
-        <*> optionalField "log-level" "The minimal severity for log messages" .= configLogLevel
-        <*> optionalFieldWithDefault "specs" [] "The files and directories containing specifications" .= configSpecifications
+        <$> optionalFieldWith "server-url" (bimapCodec (left show . parseBaseUrl) showBaseUrl codec) "Server base url"
+          .= configBaseUrl
+        <*> optionalField "username" "Server account username"
+          .= configUsername
+        <*> optionalField "password" "Server account password"
+          .= configPassword
+        <*> optionalField "database" "The path to the database"
+          .= configDbFile
+        <*> optionalField "log-level" "The minimal severity for log messages"
+          .= configLogLevel
+        <*> optionalFieldWithDefault "specs" [] "The files and directories containing specifications"
+          .= configSpecifications
 
 instance HasCodec LogLevel where
   codec =
@@ -206,7 +211,7 @@ argParser =
         [ Env.helpDoc environmentParser,
           "",
           "Configuration file format:",
-          T.unpack (TE.decodeUtf8 (renderColouredSchemaViaCodec @Configuration))
+          T.unpack (renderColouredSchemaViaCodec @Configuration)
         ]
 
 parseArgs :: OptParse.Parser Arguments

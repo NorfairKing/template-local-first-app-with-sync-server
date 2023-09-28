@@ -30,12 +30,12 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - autodocodec
+    - foo-bar-data
+    - foo-bar-data-gen
     - genvalidity-hspec
     - genvalidity-hspec-aeson
     - genvalidity-hspec-persistent
     - hspec
     - path
     - path-io
-    - foo-bar-data
-    - foo-bar-data-gen
-    - yamlparse-applicative

@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -9,7 +10,8 @@
 
 module Foo.Bar.API.Data where
 
-import Data.Aeson
+import Autodocodec
+import Data.Aeson (FromJSON, FromJSONKey (..), ToJSON, ToJSONKey (..))
 import qualified Data.Appendful as Appendful
 import Data.Functor.Contravariant
 import qualified Data.Mergeful as Mergeful
@@ -19,7 +21,7 @@ import qualified Data.Text as T
 import Data.Validity
 import Data.Validity.Text ()
 import Database.Persist
-import Database.Persist.Sql
+import Database.Persist.Sql as DB
 import Foo.Bar.API.Server.Data
 import Foo.Bar.Client.Data
 import Foo.Bar.Data
@@ -30,7 +32,8 @@ data RegistrationForm = RegistrationForm
   { registrationFormUsername :: Username,
     registrationFormPassword :: Text
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec RegistrationForm)
 
 instance Validity RegistrationForm where
   validate rf@RegistrationForm {..} =
@@ -39,36 +42,32 @@ instance Validity RegistrationForm where
         declare "The password is nonempty" $ not $ T.null registrationFormPassword
       ]
 
-instance ToJSON RegistrationForm where
-  toJSON RegistrationForm {..} =
-    object
-      [ "name" .= registrationFormUsername,
-        "password" .= registrationFormPassword
-      ]
-
-instance FromJSON RegistrationForm where
-  parseJSON =
-    withObject "RegistrationForm" $ \o ->
-      RegistrationForm <$> o .: "name" <*> o .: "password"
+instance HasCodec RegistrationForm where
+  codec =
+    object "RegistrationForm" $
+      RegistrationForm
+        <$> requiredField "name" "user name"
+          .= registrationFormUsername
+        <*> requiredField "password" "password"
+          .= registrationFormPassword
 
 data LoginForm = LoginForm
   { loginFormUsername :: Username,
     loginFormPassword :: Text
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec LoginForm)
 
 instance Validity LoginForm
 
-instance FromJSON LoginForm where
-  parseJSON = withObject "LoginForm" $ \o ->
-    LoginForm <$> o .: "username" <*> o .: "password"
-
-instance ToJSON LoginForm where
-  toJSON LoginForm {..} =
-    object
-      [ "username" .= loginFormUsername,
-        "password" .= loginFormPassword
-      ]
+instance HasCodec LoginForm where
+  codec =
+    object "LoginForm" $
+      LoginForm
+        <$> requiredField "username" "user name"
+          .= loginFormUsername
+        <*> requiredField "password" "password"
+          .= loginFormPassword
 
 data AuthCookie = AuthCookie
   { authCookieUsername :: Username
@@ -88,51 +87,48 @@ data SyncRequest = SyncRequest
     syncRequestMergelessThingSyncRequest :: Mergeless.SyncRequest ClientMergelessThingId ServerMergelessThingId Thing,
     syncRequestMergefulThingSyncRequest :: Mergeful.SyncRequest ClientMergefulThingId ServerMergefulThingId Thing
   }
-  deriving (Show, Eq, Generic)
+  deriving stock (Show, Eq, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec SyncRequest)
 
 instance Validity SyncRequest
 
-instance FromJSON SyncRequest where
-  parseJSON = withObject "SyncResponse" $ \o ->
-    SyncRequest
-      <$> o .: "appendful"
-      <*> o .: "mergeless"
-      <*> o .: "mergeful"
-
-instance ToJSON SyncRequest where
-  toJSON SyncRequest {..} =
-    object
-      [ "appendful" .= syncRequestAppendfulThingSyncRequest,
-        "mergeless" .= syncRequestMergelessThingSyncRequest,
-        "mergeful" .= syncRequestMergefulThingSyncRequest
-      ]
+instance HasCodec SyncRequest where
+  codec =
+    object "SyncResponse" $
+      SyncRequest
+        <$> requiredField "appendful" "appendful fields"
+          .= syncRequestAppendfulThingSyncRequest
+        <*> requiredField "mergeless" "mergeless items"
+          .= syncRequestMergelessThingSyncRequest
+        <*> requiredField "mergeful" "mergeful items"
+          .= syncRequestMergefulThingSyncRequest
 
 data SyncResponse = SyncResponse
   { syncResponseAppendfulThingSyncResponse :: Appendful.SyncResponse ClientAppendfulThingId ServerAppendfulThingId Thing,
     syncResponseMergelessThingSyncResponse :: Mergeless.SyncResponse ClientMergelessThingId ServerMergelessThingId Thing,
     syncResponseMergefulThingSyncResponse :: Mergeful.SyncResponse ClientMergefulThingId ServerMergefulThingId Thing
   }
-  deriving (Show, Eq, Generic)
+  deriving stock (Show, Eq, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec SyncResponse)
 
 instance Validity SyncResponse
 
-instance FromJSON SyncResponse where
-  parseJSON = withObject "SyncResponse" $ \o ->
-    SyncResponse
-      <$> o .: "appendful"
-      <*> o .: "mergeless"
-      <*> o .: "mergeful"
+instance HasCodec SyncResponse where
+  codec =
+    object "SyncResponse" $
+      SyncResponse
+        <$> requiredField "appendful" "appendful fields"
+          .= syncResponseAppendfulThingSyncResponse
+        <*> requiredField "mergeless" "mergeless items"
+          .= syncResponseMergelessThingSyncResponse
+        <*> requiredField "mergeful" "mergeful items"
+          .= syncResponseMergefulThingSyncResponse
 
-instance ToJSON SyncResponse where
-  toJSON SyncResponse {..} =
-    object
-      [ "appendful" .= syncResponseAppendfulThingSyncResponse,
-        "mergeless" .= syncResponseMergelessThingSyncResponse,
-        "mergeful" .= syncResponseMergefulThingSyncResponse
-      ]
+instance ToBackendKey SqlBackend a => HasCodec (Key a) where
+  codec = dimapCodec toSqlKey fromSqlKey codec
 
-instance (PersistEntity a, ToBackendKey SqlBackend a) => ToJSONKey (Key a) where
+instance ToBackendKey SqlBackend a => ToJSONKey (Key a) where
   toJSONKey = contramap fromSqlKey toJSONKey
 
-instance (PersistEntity a, ToBackendKey SqlBackend a) => FromJSONKey (Key a) where
+instance ToBackendKey SqlBackend a => FromJSONKey (Key a) where
   fromJSONKey = toSqlKey <$> fromJSONKey
