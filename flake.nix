@@ -5,8 +5,10 @@
     extra-trusted-public-keys = "foobar.cachix.org-1:srabhQPgZR0EO+bOppsCWbesHOgk8ABakPL8D1h5wOU=";
   };
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-23.05";
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-23.11";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    appendful.url = "github:NorfairKing/appendful";
+    appendful.flake = false;
     mergeless.url = "github:NorfairKing/mergeless";
     mergeless.flake = false;
     mergeful.url = "github:NorfairKing/mergeful";
@@ -18,8 +20,8 @@
   outputs =
     { self
     , nixpkgs
-    , home-manager
     , pre-commit-hooks
+    , appendful
     , mergeless
     , mergeful
     , dekking
@@ -31,6 +33,7 @@
         config.allowUnfree = true;
         overlays = [
           self.overlays.${system}
+          (import (appendful + "/nix/overlay.nix"))
           (import (mergeless + "/nix/overlay.nix"))
           (import (mergeful + "/nix/overlay.nix"))
           (import (dekking + "/nix/overlay.nix"))
