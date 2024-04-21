@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -26,10 +25,8 @@ import Control.Monad.Logger
 import Data.Maybe
 import Data.Text (Text)
 import qualified Data.Text as T
-import Data.Yaml (FromJSON, ToJSON)
 import qualified Env
 import Foo.Bar.API.Server.Data
-import GHC.Generics (Generic)
 import Options.Applicative as OptParse
 import qualified Options.Applicative.Help as OptParse (string)
 import Path
@@ -38,7 +35,6 @@ import Servant.Client
 
 data Instructions
   = Instructions !Dispatch !Settings
-  deriving (Show, Eq, Generic)
 
 getInstructions :: IO Instructions
 getInstructions = do
@@ -55,14 +51,12 @@ data Settings = Settings
     settingDbFile :: !(Path Abs File),
     settingLogLevel :: !LogLevel
   }
-  deriving (Show, Eq, Generic)
 
 -- | A sum type for the commands and their specific settings
 data Dispatch
   = DispatchRegister
   | DispatchLogin
   | DispatchSync
-  deriving (Show, Eq, Generic)
 
 combineToInstructions :: Arguments -> Environment -> Maybe Configuration -> IO Instructions
 combineToInstructions (Arguments cmd Flags {..}) Environment {..} mConf = do
@@ -110,8 +104,6 @@ data Configuration = Configuration
     configLogLevel :: !(Maybe LogLevel),
     configSpecifications :: ![FilePath]
   }
-  deriving (Show, Eq, Generic)
-  deriving (FromJSON, ToJSON) via (Autodocodec Configuration)
 
 instance HasCodec Configuration where
   codec =
@@ -163,7 +155,6 @@ data Environment = Environment
     envDbFile :: !(Maybe FilePath),
     envLogLevel :: !(Maybe LogLevel)
   }
-  deriving (Show, Eq, Generic)
 
 getEnvironment :: IO Environment
 getEnvironment = Env.parse (Env.header "Environment") environmentParser
@@ -183,7 +174,6 @@ environmentParser =
 -- | The combination of a command with its specific flags and the flags for all commands
 data Arguments
   = Arguments !Command !Flags
-  deriving (Show, Eq, Generic)
 
 -- | Get the command-line arguments
 getArguments :: IO Arguments
@@ -222,7 +212,6 @@ data Command
   = CommandRegister
   | CommandLogin
   | CommandSync
-  deriving (Show, Eq, Generic)
 
 parseCommand :: OptParse.Parser Command
 parseCommand =
@@ -260,7 +249,6 @@ data Flags = Flags
     flagDbFile :: !(Maybe FilePath),
     flagLogLevel :: !(Maybe LogLevel)
   }
-  deriving (Show, Eq, Generic)
 
 -- | The 'optparse-applicative' parser for the 'Flags'.
 parseFlags :: OptParse.Parser Flags

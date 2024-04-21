@@ -32,7 +32,7 @@ data RegistrationForm = RegistrationForm
   { registrationFormUsername :: Username,
     registrationFormPassword :: Text
   }
-  deriving stock (Show, Eq, Ord, Generic)
+  deriving stock (Show, Generic)
   deriving (FromJSON, ToJSON) via (Autodocodec RegistrationForm)
 
 instance Validity RegistrationForm where
@@ -55,7 +55,7 @@ data LoginForm = LoginForm
   { loginFormUsername :: Username,
     loginFormPassword :: Text
   }
-  deriving stock (Show, Eq, Ord, Generic)
+  deriving stock (Show, Generic)
   deriving (FromJSON, ToJSON) via (Autodocodec LoginForm)
 
 instance Validity LoginForm
@@ -72,7 +72,7 @@ instance HasCodec LoginForm where
 data AuthCookie = AuthCookie
   { authCookieUsername :: Username
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Generic)
 
 instance FromJSON AuthCookie
 
@@ -87,7 +87,7 @@ data SyncRequest = SyncRequest
     syncRequestMergelessThingSyncRequest :: Mergeless.SyncRequest ClientMergelessThingId ServerMergelessThingId Thing,
     syncRequestMergefulThingSyncRequest :: Mergeful.SyncRequest ClientMergefulThingId ServerMergefulThingId Thing
   }
-  deriving stock (Show, Eq, Generic)
+  deriving stock (Show, Generic)
   deriving (FromJSON, ToJSON) via (Autodocodec SyncRequest)
 
 instance Validity SyncRequest
@@ -108,10 +108,7 @@ data SyncResponse = SyncResponse
     syncResponseMergelessThingSyncResponse :: Mergeless.SyncResponse ClientMergelessThingId ServerMergelessThingId Thing,
     syncResponseMergefulThingSyncResponse :: Mergeful.SyncResponse ClientMergefulThingId ServerMergefulThingId Thing
   }
-  deriving stock (Show, Eq, Generic)
   deriving (FromJSON, ToJSON) via (Autodocodec SyncResponse)
-
-instance Validity SyncResponse
 
 instance HasCodec SyncResponse where
   codec =

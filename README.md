@@ -15,12 +15,13 @@ Both the server and the client use Sqlite to store the data that they synchronis
 * Per-route integration tests for the API server
 * Per-command integration test for the CLI tool
 * Option parsing & Option parsing tests for both the server and the CLI tool
-* Coverage report
 * Stack build
 * Nix build
 * Cabal build
 * NixOS module for hosting the server
 * Nix home manager module for using the client with automated syncing
+* Weeder check
+* Test coverage report
 * Flake-based CI
 * Pre-commit hooks
   * ormolu

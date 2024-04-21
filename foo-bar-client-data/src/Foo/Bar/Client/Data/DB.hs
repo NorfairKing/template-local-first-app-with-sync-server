@@ -57,9 +57,6 @@ clientAppendfulMakeThing ClientAppendfulThing {..} = Thing {..}
 makeSyncedClientAppendfulThing :: ServerAppendfulThingId -> Thing -> ClientAppendfulThing
 makeSyncedClientAppendfulThing sid = makeClientAppendfulThing (Just sid)
 
-makeUnsyncedClientAppendfulThing :: Thing -> ClientAppendfulThing
-makeUnsyncedClientAppendfulThing = makeClientAppendfulThing Nothing
-
 makeClientAppendfulThing :: Maybe ServerAppendfulThingId -> Thing -> ClientAppendfulThing
 makeClientAppendfulThing clientAppendfulThingServerId Thing {..} = ClientAppendfulThing {..}
   where
@@ -73,9 +70,6 @@ clientMergelessMakeThing ClientMergelessThing {..} = Thing {..}
 makeSyncedClientMergelessThing :: ServerMergelessThingId -> Thing -> ClientMergelessThing
 makeSyncedClientMergelessThing sid = makeClientMergelessThing (Just sid)
 
-makeUnsyncedClientMergelessThing :: Thing -> ClientMergelessThing
-makeUnsyncedClientMergelessThing = makeClientMergelessThing Nothing
-
 makeClientMergelessThing :: Maybe ServerMergelessThingId -> Thing -> ClientMergelessThing
 makeClientMergelessThing clientMergelessThingServerId Thing {..} = ClientMergelessThing {..}
   where
@@ -86,9 +80,6 @@ clientMergefulMakeThing :: ClientMergefulThing -> (Maybe ServerMergefulThingId, 
 clientMergefulMakeThing ClientMergefulThing {..} = (clientMergefulThingServerId, clientMergefulThingServerTime, Thing {..})
   where
     thingNumber = clientMergefulThingNumber
-
-makeUnsyncedClientMergefulThing :: Thing -> ClientMergefulThing
-makeUnsyncedClientMergefulThing = makeClientMergefulThing Nothing Nothing
 
 makeSyncedClientMergefulThing :: ServerMergefulThingId -> Timed Thing -> ClientMergefulThing
 makeSyncedClientMergefulThing sid (Timed h st) = makeClientMergefulThing (Just sid) (Just st) h

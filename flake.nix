@@ -7,6 +7,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-23.11";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    weeder-nix.url = "github:NorfairKing/weeder-nix";
+    weeder-nix.flake = false;
     appendful.url = "github:NorfairKing/appendful";
     appendful.flake = false;
     mergeless.url = "github:NorfairKing/mergeless";
@@ -21,6 +23,7 @@
     { self
     , nixpkgs
     , pre-commit-hooks
+    , weeder-nix
     , appendful
     , mergeless
     , mergeful
@@ -37,6 +40,7 @@
           (import (mergeless + "/nix/overlay.nix"))
           (import (mergeful + "/nix/overlay.nix"))
           (import (dekking + "/nix/overlay.nix"))
+          (import (weeder-nix + "/nix/overlay.nix"))
         ];
       };
       pkgs = pkgsFor nixpkgs;
@@ -64,6 +68,10 @@
             "foo-bar-api-server-gen"
             "foo-bar-data-gen"
           ];
+        };
+        weeder-check = pkgs.weeder-nix.makeWeederCheck {
+          weederToml = ./weeder.toml;
+          packages = builtins.attrNames pkgs.haskellPackages.fooBarPackages;
         };
         pre-commit = pre-commit-hooks.lib.${system}.run {
           src = ./.;

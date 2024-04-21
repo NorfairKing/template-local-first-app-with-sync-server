@@ -2,11 +2,10 @@ final: prev:
 with final.lib;
 with final.haskell.lib;
 {
-  fooBarRelease =
-    final.symlinkJoin {
-      name = "foo-bar-release";
-      paths = final.lib.attrValues final.haskellPackages.fooBarPackages;
-    };
+  fooBarRelease = final.symlinkJoin {
+    name = "foo-bar-release";
+    paths = final.lib.attrValues final.haskellPackages.fooBarPackages;
+  };
   haskellPackages = prev.haskellPackages.override (old: {
     overrides = final.lib.composeExtensions (old.overrides or (_: _: { }))
       (

@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
@@ -20,13 +19,11 @@ import Data.Mergeful
 import Data.Mergeful.Persistent ()
 import Data.Password.Bcrypt
 import Data.Password.Instances ()
-import Data.Validity
 import Data.Validity.Persist ()
 import Database.Persist.Sqlite
 import Database.Persist.TH
 import Foo.Bar.API.Server.Data.Username
 import Foo.Bar.Data
-import GHC.Generics (Generic)
 
 share
   [mkPersist sqlSettings, mkMigrate "serverMigration"]
@@ -38,46 +35,29 @@ User
 
   UniqueUsername name
 
-  deriving Show Eq Ord Generic
+  deriving Show Eq Ord
 
 
 ServerAppendfulThing sql=appendful_thing
   user UserId
   number Int
 
-  deriving Show Eq Ord Generic
+  deriving Show Eq Ord
 
 ServerMergelessThing sql=mergeless_thing
   user UserId
   number Int
 
-  deriving Show Eq Ord Generic
+  deriving Show Eq Ord
 
 ServerMergefulThing sql=mergeful_thing
   user UserId
   number Int
   time ServerTime
 
-  deriving Show Eq Ord Generic
+  deriving Show Eq Ord
 
 |]
-
-instance Validity (Salt a) where
-  validate = trivialValidation
-
-instance Validity Password where
-  validate = trivialValidation
-
-instance Validity (PasswordHash a) where
-  validate = trivialValidation
-
-instance Validity User
-
-instance Validity ServerAppendfulThing
-
-instance Validity ServerMergelessThing
-
-instance Validity ServerMergefulThing
 
 serverAppendfulMakeThing :: ServerAppendfulThing -> Thing
 serverAppendfulMakeThing ServerAppendfulThing {..} = Thing {..}
