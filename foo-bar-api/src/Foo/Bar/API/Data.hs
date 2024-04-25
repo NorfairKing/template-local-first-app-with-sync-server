@@ -121,11 +121,11 @@ instance HasCodec SyncResponse where
         <*> requiredField "mergeful" "mergeful items"
           .= syncResponseMergefulThingSyncResponse
 
-instance ToBackendKey SqlBackend a => HasCodec (Key a) where
+instance (ToBackendKey SqlBackend a) => HasCodec (Key a) where
   codec = dimapCodec toSqlKey fromSqlKey codec
 
-instance ToBackendKey SqlBackend a => ToJSONKey (Key a) where
+instance (ToBackendKey SqlBackend a) => ToJSONKey (Key a) where
   toJSONKey = contramap fromSqlKey toJSONKey
 
-instance ToBackendKey SqlBackend a => FromJSONKey (Key a) where
+instance (ToBackendKey SqlBackend a) => FromJSONKey (Key a) where
   fromJSONKey = toSqlKey <$> fromJSONKey
