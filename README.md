@@ -111,26 +111,17 @@ For more information about how to use the option parsing, follow the instruction
 
 If you don't need a nix build, remove these files:
 
-In `nix/pkgs.nix` we define our own 'version' of the `nixpkgs` by adding our own overlays.
+```                                                                                          
+rm -rf *.nix nix
+```
+
 The project overlay is defined in `nix/overlay.nix`.
 
-In `nix/nixos-module.nix`, we define a nixos module for hosting the sync server.
+In `nix/nixos-module.nix`, we define a NixOS module for hosting the sync server.
 In `nix/home-manager-module.nix`, we define a nix home manager module for using the project on NixOS with automatic syncing.
 In `nix/nixos-module-test.nix`, both of those are tested. This test is not run on CI because GitHub actions does not support it.
 
 See the instructions in `nix/overlay.nix` for more details.
-
-### CI
-
-CI is set up for both a stack build and a nix build.
-See `.github/workflows` for more details.
-
-The stack build should "just work".
-
-For the nix build to work, there is a manual step that you need to go through:
-First, make a cachix cache at cachix.org.
-Put its name in the right places within `.github/workflows/nix.yaml`.
-Then put its signing key in the 'Secrets' part of your repository on github.
 
 ### Workflow examples
 

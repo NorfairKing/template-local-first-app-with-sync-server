@@ -13,8 +13,6 @@ let
 
   mergeListRecursively = pkgs.callPackage ./merge-lists-recursively.nix { };
 
-  toYamlFile = pkgs.callPackage ./to-yaml.nix { };
-
 in
 {
   options = {
@@ -97,7 +95,7 @@ in
 
       # Convert the config file to pretty yaml, for readability.
       # The keys will not be in the "right" order but that's fine.
-      fooBarConfigFile = toYamlFile "foo-bar-config" fooBarConfig;
+      fooBarConfigFile = (pkgs.formats.yaml { }).generate "foo-bar-config.yaml" fooBarConfig;
 
       services = (optionalAttrs (cfg.sync.enable or false) {
         "${syncFooBarName}" = syncFooBarService;
