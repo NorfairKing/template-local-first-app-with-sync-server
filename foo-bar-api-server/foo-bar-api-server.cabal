@@ -32,6 +32,8 @@ library
       Paths_foo_bar_api_server
   hs-source-dirs:
       src
+  build-tool-depends:
+      autoexporter:autoexporter
   build-depends:
       aeson
     , appendful

@@ -1,8 +1,9 @@
 { mkDerivation, aeson, appendful, appendful-persistent, autodocodec
-, base, foo-bar-data, lib, mergeful, mergeful-persistent, mergeless
-, mergeless-persistent, password, password-instances, persistent
-, persistent-sqlite, persistent-template, text, time, validity
-, validity-persistent, validity-text
+, autoexporter, base, foo-bar-data, lib, mergeful
+, mergeful-persistent, mergeless, mergeless-persistent, password
+, password-instances, persistent, persistent-sqlite
+, persistent-template, text, time, validity, validity-persistent
+, validity-text
 }:
 mkDerivation {
   pname = "foo-bar-api-server-data";
@@ -15,6 +16,7 @@ mkDerivation {
     persistent-template text time validity validity-persistent
     validity-text
   ];
+  libraryToolDepends = [ autoexporter ];
   homepage = "https://github.com/NorfairKing/foo-bar#readme";
   license = lib.licenses.unfree;
   hydraPlatforms = lib.platforms.none;

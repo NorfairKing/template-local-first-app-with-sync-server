@@ -1,9 +1,9 @@
 { mkDerivation, appendful, appendful-persistent, autodocodec
-, autodocodec-yaml, base, cookie, envparse, filelock, foo-bar-api
-, foo-bar-api-server-data, foo-bar-api-server-gen, foo-bar-client
-, foo-bar-client-data, foo-bar-data, genvalidity, genvalidity-hspec
-, hspec, http-client, http-client-tls, lib, mergeful
-, mergeful-persistent, mergeless, mergeless-persistent
+, autodocodec-yaml, autoexporter, base, cookie, envparse, filelock
+, foo-bar-api, foo-bar-api-server-data, foo-bar-api-server-gen
+, foo-bar-client, foo-bar-client-data, foo-bar-data, genvalidity
+, genvalidity-hspec, hspec, http-client, http-client-tls, lib
+, mergeful, mergeful-persistent, mergeless, mergeless-persistent
 , monad-logger, mtl, optparse-applicative, path, path-io
 , persistent, persistent-sqlite, servant, servant-auth-client
 , servant-client, text, yaml
@@ -23,6 +23,7 @@ mkDerivation {
     path-io persistent persistent-sqlite servant servant-auth-client
     servant-client text yaml
   ];
+  libraryToolDepends = [ autoexporter ];
   executableHaskellDepends = [ base ];
   testHaskellDepends = [
     base foo-bar-api foo-bar-api-server-data foo-bar-api-server-gen

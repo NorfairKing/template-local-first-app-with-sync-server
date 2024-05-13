@@ -26,6 +26,8 @@ library
       Paths_foo_bar_client_data
   hs-source-dirs:
       src
+  build-tool-depends:
+      autoexporter:autoexporter
   build-depends:
       base >=4.7 && <5
     , foo-bar-api-server-data

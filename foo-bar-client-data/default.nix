@@ -1,7 +1,7 @@
-{ mkDerivation, base, foo-bar-api-server-data, foo-bar-data
-, genvalidity-hspec, genvalidity-hspec-persistent, hspec, lib
-, mergeful, mergeful-persistent, persistent, persistent-sqlite
-, persistent-template, safe, time
+{ mkDerivation, autoexporter, base, foo-bar-api-server-data
+, foo-bar-data, genvalidity-hspec, genvalidity-hspec-persistent
+, hspec, lib, mergeful, mergeful-persistent, persistent
+, persistent-sqlite, persistent-template, safe, time
 }:
 mkDerivation {
   pname = "foo-bar-client-data";
@@ -12,6 +12,7 @@ mkDerivation {
     mergeful-persistent persistent persistent-sqlite
     persistent-template safe time
   ];
+  libraryToolDepends = [ autoexporter ];
   testHaskellDepends = [
     base genvalidity-hspec genvalidity-hspec-persistent hspec
   ];
