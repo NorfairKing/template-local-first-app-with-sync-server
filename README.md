@@ -111,10 +111,6 @@ For more information about how to use the option parsing, follow the instruction
 
 If you don't need a nix build, remove these files:
 
-```
-rm -rf *.nix nix .github/workflows/nix.yaml
-```
-
 In `nix/pkgs.nix` we define our own 'version' of the `nixpkgs` by adding our own overlays.
 The project overlay is defined in `nix/overlay.nix`.
 

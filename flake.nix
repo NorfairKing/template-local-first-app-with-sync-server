@@ -6,6 +6,7 @@
   };
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-23.11";
+    home-manager.url = "github:nix-community/home-manager?ref=release-23.11";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     weeder-nix.url = "github:NorfairKing/weeder-nix";
     weeder-nix.flake = false;
@@ -22,6 +23,7 @@
   outputs =
     { self
     , nixpkgs
+    , home-manager
     , pre-commit-hooks
     , weeder-nix
     , appendful
@@ -44,6 +46,9 @@
         ];
       };
       pkgsMusl = pkgs.pkgsMusl;
+      mkNixosModule = import ./nix/nixos-module.nix {
+        inherit (pkgsMusl.fooBarReleasePackages) foo-bar-api-server;
+      };
     in
     {
       overlays.${system} = import ./nix/overlay.nix;
@@ -88,6 +93,12 @@
             cabal2nix.enable = true;
           };
         };
+        nixos-module-test = import ./nix/nixos-module-test.nix {
+          inherit (pkgs) nixosTest;
+          home-manager = home-manager.nixosModules.home-manager;
+          foo-bar-nixos-module-factory = self.nixosModuleFactories.${system}.default;
+          foo-bar-home-manager-module = self.homeManagerModules.${system}.default;
+        };
       };
       devShells.${system}.default = pkgs.haskellPackages.shellFor {
         name = "foo-bar-shell";
@@ -108,5 +119,8 @@
           ]);
         shellHook = self.checks.${system}.pre-commit.shellHook;
       };
+      nixosModules.${system}.default = mkNixosModule { envname = "production"; };
+      nixosModuleFactories.${system}.default = mkNixosModule;
+      homeManagerModules.${system}.default = import ./nix/home-manager-module.nix { inherit (pkgsMusl.fooBarReleasePackages) foo-bar-cli; };
     };
 }
