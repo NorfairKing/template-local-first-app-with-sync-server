@@ -11,7 +11,7 @@ import Data.Maybe
 import qualified Data.Text as T
 import qualified Env
 import Options.Applicative as OptParse
-import qualified Options.Applicative.Help as OptParse (string)
+import qualified Options.Applicative.Help as OptParse (pretty)
 import Path
 import Path.IO
 
@@ -98,7 +98,7 @@ flagsParser :: OptParse.ParserInfo Flags
 flagsParser =
   OptParse.info
     (OptParse.helper <*> parseFlags)
-    (OptParse.fullDesc <> OptParse.footerDoc (Just $ OptParse.string footerStr))
+    (OptParse.fullDesc <> OptParse.footerDoc (Just $ OptParse.pretty footerStr))
   where
     footerStr =
       unlines

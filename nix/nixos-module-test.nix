@@ -37,7 +37,7 @@ nixosTest ({
             foo-bar-home-manager-module
           ];
           xdg.enable = true;
-          home.stateVersion = "23.11";
+          home.stateVersion = "24.05";
           programs.foo-bar = {
             enable = true;
             sync = {

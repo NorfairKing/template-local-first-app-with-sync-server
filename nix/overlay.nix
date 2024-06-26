@@ -33,7 +33,7 @@ with final.haskell.lib;
     else prev.sqlite;
 
   haskellPackages = prev.haskellPackages.override (old: {
-    overrides = final.lib.composeExtensions (old.overrides or (_: _: { })) (self: _:
+    overrides = final.lib.composeExtensions (old.overrides or (_: _: { })) (self: super:
       let
         fooBarPkg = name:
           buildFromSdist (overrideCabal (self.callPackage (../${name}/default.nix) { }) (old: {
@@ -81,25 +81,30 @@ with final.haskell.lib;
           foo-bar-data-gen = fooBarPkg "foo-bar-data-gen";
         };
 
-        servantPkg = name: subdir: self.callCabal2nix name
-          ((builtins.fetchGit {
-            url = "https://github.com/haskell-servant/servant";
-            rev = "552da96ff9a6d81a8553c6429843178d78356054";
-          }) + "/${subdir}")
-          { };
-        servantPackages = {
-          "servant" = servantPkg "servant" "servant";
-          "servant-client" = servantPkg "servant-client" "servant-client";
-          "servant-client-core" = servantPkg "servant-client-core" "servant-client-core";
-          "servant-server" = servantPkg "servant-server" "servant-server";
-          "servant-auth" = servantPkg "servant-auth-client" "servant-auth/servant-auth";
-          "servant-auth-client" = servantPkg "servant-auth-client" "servant-auth/servant-auth-client";
-          "servant-auth-server" = servantPkg "servant-auth-server" "servant-auth/servant-auth-server";
-        };
+        fixGHC = pkg:
+          if final.stdenv.hostPlatform.isMusl
+          then
+            pkg.override
+              {
+                # To make sure that executables that need template
+                # haskell can be linked statically.
+                enableRelocatedStaticLibs = true;
+                enableShared = false;
+                enableDwarf = false;
+              }
+          else pkg;
+
       in
       {
+        ghc = fixGHC super.ghc;
+        buildHaskellPackages = old.buildHaskellPackages.override (oldBuildHaskellPackages: {
+          ghc = fixGHC oldBuildHaskellPackages.ghc;
+        });
         inherit fooBarPackages;
-      } // fooBarPackages // servantPackages
+
+        # Not actually broken
+        servant-auth-server = unmarkBroken super.servant-auth-server;
+      } // fooBarPackages
     );
   });
 }

@@ -7,6 +7,7 @@ module Foo.Bar.CLI
   )
 where
 
+import Control.Monad
 import Control.Monad.Logger
 import qualified Data.Text as T
 import Database.Persist.Sqlite
